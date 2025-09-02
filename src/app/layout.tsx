@@ -27,7 +27,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<NextTopLoader />
+				<NextTopLoader showSpinner={false} />
 				{children}
 				<Toaster position="top-right" closeButton theme="light" />
 			</body>

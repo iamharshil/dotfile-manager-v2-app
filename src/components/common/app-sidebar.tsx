@@ -36,7 +36,7 @@ const items = [
 	},
 	{
 		title: "Settings",
-		url: "/settings",
+		url: "/dashboard/settings",
 		icon: SlidersHorizontal,
 	},
 ];
