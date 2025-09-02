@@ -28,7 +28,7 @@ export default function Home() {
 				<div className="flex flex-col sm:flex-row gap-4 w-full justify-center items-center">
 					<a
 						className="rounded-full border-none transition-all flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white gap-2 hover:scale-105 hover:from-blue-700 hover:to-purple-700 font-semibold text-base sm:text-lg h-12 px-8 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-						href="/signup"
+						href="/auth/signup"
 						aria-label="Sign up and get started"
 					>
 						<UserPlus size={22} className="mr-1" />
@@ -36,7 +36,7 @@ export default function Home() {
 					</a>
 					<a
 						className="rounded-full border border-blue-600 dark:border-blue-400 transition-all flex items-center justify-center bg-white dark:bg-[#222] hover:bg-blue-50 dark:hover:bg-blue-900 font-semibold text-base sm:text-lg h-12 px-8 text-blue-700 dark:text-blue-300 shadow focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:scale-105"
-						href="/login"
+						href="/auth/signin"
 						aria-label="Login to your account"
 					>
 						<LogIn size={22} className="mr-1" />

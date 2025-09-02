@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+				<NextTopLoader />
 				{children}
 				<Toaster position="top-right" closeButton theme="light" />
 			</body>
