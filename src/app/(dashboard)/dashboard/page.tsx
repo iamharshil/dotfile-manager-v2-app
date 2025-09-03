@@ -1,10 +1,6 @@
-"use client";
-
 import {
-	Menu,
 	User,
 	Settings,
-	LogOut,
 	Server,
 	FileText,
 	Share2,
@@ -28,9 +24,12 @@ import {
 	DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { redirect } from "next/navigation";
+import SignOutComponent from "@/components/dashboard/signout";
+import { getSession } from "@/utils/session";
+import database from "@/utils/database";
+import TokenModel from "@/models/Token.model";
+import moment from "moment";
 
 // Dummy analytics data
 const analytics = {
@@ -51,14 +50,20 @@ const analytics = {
 	trendingRigs: 1,
 };
 
-export default function Dashboard() {
-	const handleLogout = async () => {
-		const res = await fetch("/api/auth/logout");
-		if (res.ok) {
-			return redirect("/auth/signin");
-		}
-	};
+const UserInfo = async () => {
+	"use server";
 
+	const session = await getSession();
+	if (!session?.id) return null;
+
+	await database();
+	const user = await TokenModel.findOne({ token: session.id }).populate("userId");
+	return { ...user?.userId?._doc, lastLogin: moment(user?.createdAt).fromNow() };
+};
+
+export default async function Dashboard() {
+	const user = await UserInfo();
+	console.log(`⚠️ ~ ${new Date().toLocaleString()} ~ user:`, user);
 	return (
 		<div className="flex-1 flex flex-col min-h-screen">
 			{/* Header */}
@@ -73,7 +78,7 @@ export default function Dashboard() {
 					<DropdownMenuTrigger asChild>
 						<Button variant="ghost" size="icon" className="rounded-full">
 							<Avatar>
-								<AvatarImage src="/avatar.png" alt="User" />
+								<AvatarImage src={user?.image} alt="User" />
 								<AvatarFallback>
 									<User size={20} />
 								</AvatarFallback>
@@ -83,14 +88,14 @@ export default function Dashboard() {
 					<DropdownMenuContent align="end" className="min-w-[180px]">
 						<div className="flex items-center gap-2 px-2 py-1">
 							<Avatar className="h-8 w-8">
-								<AvatarImage src="/avatar.png" alt="User" />
+								<AvatarImage src={user?.image} alt="User" />
 								<AvatarFallback>
 									<User size={18} />
 								</AvatarFallback>
 							</Avatar>
 							<div>
-								<div className="font-medium">Harshil</div>
-								<div className="text-xs text-gray-500 dark:text-gray-400">harshil@email.com</div>
+								<div className="font-medium">{user?.name}</div>
+								<div className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</div>
 							</div>
 						</div>
 						<DropdownMenuSeparator />
@@ -100,13 +105,7 @@ export default function Dashboard() {
 								Settings
 							</Link>
 						</DropdownMenuItem>
-						<DropdownMenuItem
-							className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900 flex items-center gap-2"
-							onClick={handleLogout}
-						>
-							<LogOut size={16} />
-							Logout
-						</DropdownMenuItem>
+						<SignOutComponent />
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</header>
@@ -118,13 +117,13 @@ export default function Dashboard() {
 					<div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
 						<div>
 							<h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-								Welcome, Harshil!
+								Welcome, {user?.name ?? "User"}!
 							</h1>
 							<p className="text-base text-gray-700 dark:text-gray-300 mt-1">
 								Account Type: <span className="font-bold">{analytics.accountType}</span>
 							</p>
 							<p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-								Last login: {analytics.lastLogin}
+								Last login: {user?.lastLogin}
 							</p>
 						</div>
 						<Button

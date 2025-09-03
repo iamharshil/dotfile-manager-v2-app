@@ -40,7 +40,8 @@ export const POST = async (req: Request) => {
 			});
 		} else {
 			await UserModel.create({
-				...validate.data,
+				name: validate.data.name,
+				email: validate.data.email,
 				password: hashedPassword,
 				otp,
 				otpExpires,
