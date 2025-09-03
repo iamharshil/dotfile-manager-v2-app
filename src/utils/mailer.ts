@@ -4,29 +4,46 @@ import type SMTPTransport from "nodemailer/lib/smtp-transport";
 interface MailOptions {
 	to: string;
 	subject: string;
-	text: string;
+	text?: string;
 	html?: string;
 }
 
 const transporter = nodemailer.createTransport({
-	host: process.env.SMTP_HOST,
-	port: Number(process.env.SMTP_PORT) || 587,
-	secure: false, // true for 465, false for other ports
+	service: "gmail",
 	auth: {
-		user: process.env.SMTP_USER,
-		pass: process.env.SMTP_PASS,
+		user: process.env.GOOGLE_SMTP_USER,
+		pass: process.env.GOOGLE_SMTP_PASS,
 	},
 } as SMTPTransport.Options);
 
 export async function sendMail(options: MailOptions) {
 	const mailOptions = {
-		from: process.env.SMTP_FROM, // sender address
-		to: options.to, // list of receivers
-		subject: options.subject, // Subject line
-		text: options.text, // plain text body
-		html: options.html, // html body
+		from: process.env.GOOGLE_SMTP_USER,
+		to: options.to,
+		subject: options.subject,
+		text: options.text,
+		html: options.html,
 	};
-	await transporter.sendMail(mailOptions);
-	console.log("Message sent: %s", options.to);
-	return true;
+	return transporter.sendMail(mailOptions, (error) => {
+		if (error) {
+			console.error("Error sending email:", error);
+			return false;
+		}
+		return true;
+	});
 }
+
+async function mailer(type: string, options: MailOptions) {
+	switch (type) {
+		case "register":
+			return sendMail(options);
+		case "login":
+			return sendMail(options);
+		case "forgot-password":
+			return sendMail(options);
+		default:
+			throw new Error("Invalid mailer type");
+	}
+}
+
+export default mailer;
