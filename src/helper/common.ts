@@ -14,3 +14,8 @@ export const generateToken = async (userId: string) => {
 	const token = jwt.sign({ id: userId }, process.env.JWT_SECRET as string, { expiresIn: "1d" });
 	return token;
 };
+
+// Generate a 6-digit OTP
+export function generateOtp(): string {
+	return Math.floor(100000 + Math.random() * 900000).toString();
+}

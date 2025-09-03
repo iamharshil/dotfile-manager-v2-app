@@ -22,6 +22,8 @@ export const POST = async (req: Request) => {
 		if (!user?._id) {
 			return NextResponse.json({ message: "Invalid email or password!" }, { status: 401 });
 		}
+		if (!user?.verified)
+			return NextResponse.json({ message: "Please verify your email to login." }, { status: 403 });
 
 		const token = await generateToken(user._id);
 		const expiresAt = new Date(Date.now() + 60 * 60 * 24 * 1000);

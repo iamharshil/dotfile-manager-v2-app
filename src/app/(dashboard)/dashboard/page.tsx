@@ -30,6 +30,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { redirect } from "next/navigation";
 
 // Dummy analytics data
 const analytics = {
@@ -51,7 +52,12 @@ const analytics = {
 };
 
 export default function Dashboard() {
-	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const handleLogout = async () => {
+		const res = await fetch("/api/auth/logout");
+		if (res.ok) {
+			return redirect("/auth/signin");
+		}
+	};
 
 	return (
 		<div className="flex-1 flex flex-col min-h-screen">
@@ -94,7 +100,10 @@ export default function Dashboard() {
 								Settings
 							</Link>
 						</DropdownMenuItem>
-						<DropdownMenuItem className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900 flex items-center gap-2">
+						<DropdownMenuItem
+							className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900 flex items-center gap-2"
+							onClick={handleLogout}
+						>
 							<LogOut size={16} />
 							Logout
 						</DropdownMenuItem>
