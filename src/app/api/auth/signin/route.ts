@@ -1,4 +1,4 @@
-import { generateToken } from "@/helper/common";
+import { comparePassword, generateToken } from "@/helper/common";
 import { MESSAGES } from "@/helper/messages";
 import { signInSchema } from "@/helper/validation";
 import TokenModel from "@/models/Token.model";
@@ -24,6 +24,11 @@ export const POST = async (req: Request) => {
 		}
 		if (!user?.verified)
 			return NextResponse.json({ message: "Please verify your email to login." }, { status: 403 });
+
+		const password = await comparePassword(validate.data.password, user.password);
+		if (!password) {
+			return NextResponse.json({ message: "Invalid email or password!" }, { status: 401 });
+		}
 
 		const token = await generateToken(user._id);
 		const expiresAt = new Date(Date.now() + 60 * 60 * 24 * 1000);

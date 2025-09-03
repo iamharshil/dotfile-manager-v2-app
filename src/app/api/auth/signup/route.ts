@@ -3,8 +3,9 @@ import { signUpSchema } from "@/helper/validation";
 import UserModel from "@/models/User.model";
 import database from "@/utils/database";
 import { NextResponse } from "next/server";
-import { generateOtp } from "@/helper/common";
+import { generateOtp, hashPassword } from "@/helper/common";
 import mailer from "@/utils/mailer";
+import bcrypt from "bcrypt";
 
 export const POST = async (req: Request) => {
 	try {
@@ -18,7 +19,7 @@ export const POST = async (req: Request) => {
 
 		await database();
 		const exists = await UserModel.findOne({ email: validate.data.email });
-		if (exists?._id) {
+		if (exists?._id && exists?.verified) {
 			return NextResponse.json({ message: "User already exists!" }, { status: 409 });
 		}
 
@@ -27,13 +28,26 @@ export const POST = async (req: Request) => {
 		const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min expiry
 		const otpRetries = 0;
 
-		await UserModel.create({
-			...validate.data,
-			otp,
-			otpExpires,
-			otpRetries,
-			verified: false,
-		});
+		const hashedPassword = await hashPassword(validate.data.password);
+
+		if (exists?._id) {
+			await UserModel.findByIdAndUpdate(exists._id, {
+				name: validate.data.name,
+				password: hashedPassword,
+				otp,
+				otpExpires,
+				otpRetries,
+			});
+		} else {
+			await UserModel.create({
+				...validate.data,
+				password: hashedPassword,
+				otp,
+				otpExpires,
+				otpRetries,
+				verified: false,
+			});
+		}
 
 		// Send OTP email
 		const html = `
