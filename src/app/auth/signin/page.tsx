@@ -1,3 +1,4 @@
+import SignInForm from "@/components/auth/signin-form";
 import { LogIn, UserPlus } from "lucide-react";
 import Link from "next/link";
 
@@ -16,45 +17,7 @@ export default function Login() {
 						Access your dotfiles and configs securely.
 					</p>
 				</div>
-				<form className="flex flex-col gap-5 w-full">
-					<div>
-						<label
-							htmlFor="email"
-							className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-						>
-							Email
-						</label>
-						<input
-							id="email"
-							type="email"
-							required
-							className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#222] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-							placeholder="you@email.com"
-						/>
-					</div>
-					<div>
-						<label
-							htmlFor="password"
-							className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-						>
-							Password
-						</label>
-						<input
-							id="password"
-							type="password"
-							required
-							className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#222] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
-							placeholder="Your password"
-						/>
-					</div>
-					<button
-						type="submit"
-						className="w-full flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 shadow hover:scale-105 transition"
-					>
-						<LogIn size={20} />
-						Login
-					</button>
-				</form>
+				<SignInForm />
 				<div className="flex flex-col items-center gap-2 w-full mt-2">
 					<Link href="/auth/signup" className="text-blue-600 dark:text-blue-400 hover:underline text-sm">
 						New here? Register

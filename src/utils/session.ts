@@ -24,3 +24,9 @@ export async function setSession(id: string) {
 	session.id = id;
 	await session.save();
 }
+
+export async function destroySession() {
+	const cookieStore = await cookies();
+	const session = await getIronSession<SessionData>(cookieStore, SESSION_CONFIG);
+	session.destroy();
+}
