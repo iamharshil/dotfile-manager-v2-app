@@ -2,11 +2,12 @@
 // skip img and other static files
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getSession } from "./utils/session";
+import { destroySession, getSession } from "./utils/session";
 
 export async function middleware(request: NextRequest) {
 	const session = await getSession();
 	if (!session?.id) {
+		await destroySession();
 		const url = request.nextUrl.clone();
 		url.pathname = "/auth/signin";
 		return NextResponse.redirect(url);

@@ -30,7 +30,6 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { signOutAction } from "@/app/actions/action";
 
 // Dummy analytics data
 const analytics = {
@@ -95,10 +94,7 @@ export default function Dashboard() {
 								Settings
 							</Link>
 						</DropdownMenuItem>
-						<DropdownMenuItem
-							className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900 flex items-center gap-2"
-							onClick={signOutAction}
-						>
+						<DropdownMenuItem className="text-red-600 hover:bg-red-50 dark:hover:bg-red-900 flex items-center gap-2">
 							<LogOut size={16} />
 							Logout
 						</DropdownMenuItem>
