@@ -59,7 +59,7 @@ const UserInfo = async () => {
 	const token = await TokenModel.findOne({ token: session.id });
 	const user = await UserModel.findById(token?.userId);
 
-	return { ...user, lastLogin: moment(token?.createdAt).fromNow() };
+	return { ...user?._doc, lastLogin: moment(token?.createdAt).fromNow() };
 };
 
 export default async function Dashboard() {
@@ -186,9 +186,14 @@ export default async function Dashboard() {
 							desc="Service reliability"
 						/>
 						<AnalyticsCard
-							icon={<CheckCircle2 size={24} className="text-green-500" />}
+							icon={
+								<CheckCircle2
+									size={24}
+									className={user?.verified ? "text-green-500" : "text-red-500"}
+								/>
+							}
 							title="Verified"
-							value={analytics.verified ? "Yes" : "No"}
+							value={user.verified ? "Yes" : "No"}
 							desc="Account status"
 						/>
 						<AnalyticsCard

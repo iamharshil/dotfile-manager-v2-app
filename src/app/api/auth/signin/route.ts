@@ -18,7 +18,7 @@ export const POST = async (req: Request) => {
 		}
 
 		await database();
-		const user = await UserModel.findOne({ email: validate.data.email });
+		const user = await UserModel.findOne({ email: validate.data.email }).select("+password");
 		if (!user?._id) {
 			return NextResponse.json({ message: "Invalid email or password!" }, { status: 401 });
 		}
