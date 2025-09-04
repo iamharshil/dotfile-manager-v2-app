@@ -28,6 +28,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import SignOutComponent from "@/components/dashboard/signout";
 import { getSession } from "@/utils/session";
 import database from "@/utils/database";
+import UserModel from "@/models/User.model";
 import TokenModel from "@/models/Token.model";
 import moment from "moment";
 
@@ -51,14 +52,14 @@ const analytics = {
 };
 
 const UserInfo = async () => {
-	"use server";
-
 	const session = await getSession();
 	if (!session?.id) return null;
 
 	await database();
-	const user = await TokenModel.findOne({ token: session.id }).populate("userId");
-	return { ...user?.userId?._doc, lastLogin: moment(user?.createdAt).fromNow() };
+	const token = await TokenModel.findOne({ token: session.id });
+	const user = await UserModel.findById(token?.userId);
+
+	return { ...user, lastLogin: moment(token?.createdAt).fromNow() };
 };
 
 export default async function Dashboard() {
