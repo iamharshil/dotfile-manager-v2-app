@@ -9,6 +9,8 @@ const UserSchema = new mongoose.Schema(
 		otpExpires: { type: Date },
 		otpRetries: { type: Number, default: 0 },
 		lastLoggedIn: { type: Date },
+		name: { type: String },
+		image: { type: String },
 	},
 	{
 		versionKey: false,

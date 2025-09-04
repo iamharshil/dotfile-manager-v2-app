@@ -63,7 +63,6 @@ const UserInfo = async () => {
 
 export default async function Dashboard() {
 	const user = await UserInfo();
-	console.log(`⚠️ ~ ${new Date().toLocaleString()} ~ user:`, user);
 	return (
 		<div className="flex-1 flex flex-col min-h-screen">
 			{/* Header */}
